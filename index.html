@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=scr, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button onclick="getData()">조회</button>
+    <button onclick="postData()">생성</button>
+    <button onclick="putData()">수정</button>
+    <button onclick="deleteData()">삭제</button>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Company</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Address</th>
+        </tr>
+      </thead>
+      <tbody id="tbBody"></tbody>
+    </table>
+    <script>
+      function getData() {
+        fetch("http://localhost:3000/customers")
+          .then((response) => response.json())
+          .then((json) => {
+            const h = [];
+            for (const customer of json) {
+              h.push(`<tr>`);
+              h.push(`<td>${customer.name}</td>`);
+              h.push(`<td>${customer.company}</td>`);
+              h.push(`<td>${customer.email}</td>`);
+              h.push(`<td>${customer.phone}</td>`);
+              h.push(`<td>${customer.address}</td>`);
+              h.push(`<tr>`);
+            }
+            document.getElementById("tbBody").innerHTML = h.join("");
+          });
+      }
+      function postData() {
+        const customer = {
+          name: "John Dow",
+          company: "THe Great",
+          email: "jhndow@genmom.com",
+          phone: "+1 (851) 0000-0000",
+          address: "Suwon",
+        };
+        fetch("http://localhost:3000/customers", {
+          method: "POST",
+          body: JSON.stringify(customer),
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+          },
+        })
+          .then((response) => response.json())
+          .then((json) => console.log(json));
+      }
+
+      function putData() {
+        const customer = {
+          name: "Jane Dow",
+          company: "THe Great",
+          email: "janedow@genmom.com",
+          phone: "+1 (851) 0000-1111",
+          address: "Suwon",
+        };
+        fetch("http://localhost:3000/customers/7559", {
+          method: "PUT",
+          body: JSON.stringify(customer),
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+          },
+        })
+          .then((response) => response.json())
+          .then((json) => console.log(json));
+      }
+
+      function deleteData() {
+        fetch("http://localhost:3000/customers/7559", {
+          method: "DELETE",
+        })
+          .then((response) => response.json())
+          .then((json) => console.log(json));
+      }
+    </script>
+  </body>
+</html>
